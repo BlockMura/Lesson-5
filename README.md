@@ -81,7 +81,9 @@ WHERE days_from BETWEEN '2018-08-01' AND '2018-08-30'
 Третий подход:
 
 START TRANSACTION;
+
   CREATE TEMPORARY TABLE date_at ( date_at DATE);
+  
   INSERT INTO date_at SELECT * FROM 
   (SELECT ADDDATE('1970-01-01',t4*10000 + t3*1000 + t2*100 + t1*10 + t0) days_from FROM
   (SELECT 0 t0 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t0,
@@ -95,14 +97,16 @@ START TRANSACTION;
  
 тут тоже ошибка совпадения с единицей выводит два раза и с нулем..остальное с нулем один раз..не пойму почему наверно надо было 
 через JOIN или LEFT JOIN но нет времени
+
  COMMIT
 
 
 Задание №4
 
 1.создаю таблицу creat_at и заполняю:
-CREATE TABLE IF NOT EXISTS creat_at ( id int(11) NOT NULL AUTO_INCREMENT, name varchar(255) NOT NULL, created_at date NOT NULL, PRIMARY KEY (id)
-);
+
+CREATE TABLE IF NOT EXISTS creat_at ( id int(11) NOT NULL AUTO_INCREMENT, name varchar(255) NOT NULL, created_at date NOT NULL, PRIMARY KEY (id));
+
 INSERT INTO creat_at VALUES
 (1, 'первая запись', '2018-08-01'),
 (2, 'вторая запись', '2012-08-02'),
@@ -132,5 +136,6 @@ INSERT INTO creat_at VALUES
     INSERT INTO creat_at SELECT id FROM creat_at ORDER BY created_at DESC LIMIT 5;
     DELETE FROM creat_at WHERE id NOT IN (SELECT id FROM day_from);
     DROP TEMPORARY TABLE creat_at;
+    
     COMMIT;
    
