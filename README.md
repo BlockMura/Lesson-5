@@ -7,11 +7,13 @@ LESSON 5
 
 Задание №2
 Например Gigabyte H310M S2H id = 6:
+
 SELECT p.id, p.name, c.name AS catalog_id FROM catalogs AS c JOIN products AS p on c.id = p.catalog_id and p.id = 6;
 
 в случае когда множество товаров, конечно надо сначала найти данный товар с помошью, например %,_ и потом вывести соответственно.
 
 Задание №3
+
 CREATE TABLE flights (
   id INT PRIMARY KEY AUTO_INCREMENT,
   `from` VARCHAR(255),
@@ -24,6 +26,7 @@ CREATE TABLE cities (
   lable VARCHAR(255) PRIMARY KEY,
   name VARCHAR(255)  
  );
+ 
 INSERT INTO cities (lable, name) VALUES ('moscow', 'Москва' ), ('irkutsk', 'Иркутск'), ('novgorod', 'Новгород'), ('kazan', 'Казань'), ('omsk', 'Омск');
 select `from`,`to` from flights;
 НЕ УСПЕЛ РЕШИТЬ, ТРЕБУЕТСЯ JOIN НО НЕ ПОЛУЧИЛОСЬ.
@@ -33,12 +36,19 @@ select `from`,`to` from flights;
 LESSON 6
 Задание №1
 1.SET AUTOCOMMIT = 0;
+
   USE shop
+  
   SELECT*FROM users WHERE id=1;
+  
   USE sample
+  
   SELECT*FROM users;
+  
   REPLACE INTO sample.users SELECT * FROM shop.users where id = 1;
+  
   можно также использовать INSERT и UPDATE
+  
   SET AUTOCOMMIT = 1; 
 
 Также можно добавить команды DESCRIBE для проверки соответствия таблиц и SHOW TABLE STATUS
@@ -47,16 +57,20 @@ LESSON 6
 Задание №2
 
 1. CREATE OR REPLACE VIEW produc AS SELECT p.name, c.name AS catalog_id FROM catalogs AS c JOIN products AS p on c.id = p.catalog_id;
+
 Если нужно выбрать конкретный файл добавляем and p.id = n;
 
 Задание №3
+
 1. CREATE TABLE IF NOT EXISTS creat_tbl ( id int(11) NOT NULL AUTO_INCREMENT, created_at date NOT NULL, PRIMARY KEY (id)
    );
+   
    INSERT INTO creat_tbl VALUES
    (1, '2018-08-01'),
    (2, '2018-08-04'),
    (3, '2018-08-16'),
    (4, '2018-08-17');
+   
 2. первый подход. выводим дни месяца:
 
    SELECT * FROM 
@@ -75,9 +89,11 @@ WHERE days_from BETWEEN '2018-08-01' AND '2018-08-30'
 
    
    1. SET @day_from = CURDATE() - INTERVAL 352 DAY;
+   
    2. SELECT @day_from := @day_from + INTERVAL 1 DAY AS day_from, IF(@days_from = created_at, '1', '0') AS status FROM creat_tbl WHERE @day_from < DATE('2018-08-31');
    
 оба подхода не решили задачу, к сожалению, буду еще думать.
+
 Третий подход:
 
 START TRANSACTION;
