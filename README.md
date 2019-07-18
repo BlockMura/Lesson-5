@@ -98,6 +98,9 @@ START TRANSACTION;
 тут тоже ошибка совпадения с единицей выводит два раза и с нулем..остальное с нулем один раз..не пойму почему наверно надо было 
 через JOIN или LEFT JOIN но нет времени
 
+SELECT d.date_at, IF(d.date_at IN (c.created_at), TRUE, FALSE) AS status from date_at as d JOIN creat_tbl as c group by d.date_at, status;
+
+
  COMMIT
 
 
