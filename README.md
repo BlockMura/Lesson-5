@@ -58,6 +58,7 @@ LESSON 6
    (3, '2018-08-16'),
    (4, '2018-08-17');
 2. первый подход. выводим дни месяца:
+
    SELECT * FROM 
 (SELECT ADDDATE('1970-01-01',t4*10000 + t3*1000 + t2*100 + t1*10 + t0) days_from FROM
  (SELECT 0 t0 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t0,
@@ -72,11 +73,13 @@ WHERE days_from BETWEEN '2018-08-01' AND '2018-08-30'
 
 второй подход
 
+   
    1. SET @day_from = CURDATE() - INTERVAL 352 DAY;
    2. SELECT @day_from := @day_from + INTERVAL 1 DAY AS day_from, IF(@days_from = created_at, '1', '0') AS status FROM creat_tbl WHERE @day_from < DATE('2018-08-31');
    
 оба подхода не решили задачу, к сожалению, буду еще думать.
 Третий подход:
+
 START TRANSACTION;
   CREATE TEMPORARY TABLE date_at ( date_at DATE);
   INSERT INTO date_at SELECT * FROM 
@@ -87,7 +90,9 @@ START TRANSACTION;
   (SELECT 0 t3 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t3,
   (SELECT 0 t4 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t4) v 
  WHERE days_from BETWEEN '2018-08-01' AND '2018-08-30';
+ 
  SELECT date_at, IF(date_at != created_at, '0', '1') AS status from date_at, creat_tbl group by date_at, status; 
+ 
 тут тоже ошибка совпадения с единицей выводит два раза и с нулем..остальное с нулем один раз..не пойму почему наверно надо было 
 через JOIN или LEFT JOIN но нет времени
  COMMIT
@@ -121,6 +126,7 @@ INSERT INTO creat_at VALUES
 (20, 'двадцатая запись', '2018-08-20');
 
  1. DELETE creat_at FROM creat_at JOIN (SELECT created_at FROM creat_at ORDER BY created_at DESC LIMIT 5, 1) AS point ON creat_at.created_at < point.created_at;
+ 
  2. START TRANSACTION;
     CREATE TEMPORARY TABLE day_from ( id INT);
     INSERT INTO creat_at SELECT id FROM creat_at ORDER BY created_at DESC LIMIT 5;
