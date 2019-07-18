@@ -132,9 +132,13 @@ INSERT INTO creat_at VALUES
  1. DELETE creat_at FROM creat_at JOIN (SELECT created_at FROM creat_at ORDER BY created_at DESC LIMIT 5, 1) AS point ON creat_at.created_at < point.created_at;
  
  2. START TRANSACTION;
+ 
     CREATE TEMPORARY TABLE day_from ( id INT);
+    
     INSERT INTO creat_at SELECT id FROM creat_at ORDER BY created_at DESC LIMIT 5;
+    
     DELETE FROM creat_at WHERE id NOT IN (SELECT id FROM day_from);
+    
     DROP TEMPORARY TABLE creat_at;
     
     COMMIT;
