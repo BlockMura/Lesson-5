@@ -7,13 +7,30 @@ LESSON 5
 FROM users 
 WHERE id IN (SELECT user_id FROM orders WHERE id = user_id);
 
+2.SELECT   u.id, u.name, o.created_at
+
+FROM   users AS u 
+
+JOIN   orders AS o 
+
+ON   u.id = o.user_id;
+
+это решение более правильное, так как указывает и время создания заказа
+
 Задание №2
 Например Gigabyte H310M S2H id = 6:
 
-SELECT p.id, p.name, c.name AS catalog_id 
+SELECT p.id, p.name, c.name 
+
+AS catalog_id 
+
 FROM catalogs AS c 
+
 JOIN products AS p
-ON c.id = p.catalog_id and p.id = 6;
+
+ON c.id = p.catalog_id 
+
+WHERE p.id = 6;
 
 в случае когда множество товаров, конечно надо сначала найти данный товар с помошью, например %,_ и потом вывести соответственно.
 
@@ -45,9 +62,34 @@ cities (lable, name) VALUES
 ('kazan', 'Казань'), 
 ('omsk', 'Омск');
 select `from`,`to` from flights;
-НЕ УСПЕЛ РЕШИТЬ, ТРЕБУЕТСЯ JOIN НО НЕ ПОЛУЧИЛОСЬ.
-наверно неправильно таблицы связал..надо сделать внешний ключ. не пойму.
 
+SELECT
+
+  f.id,
+  
+  cities_from.name AS `from`,
+  
+  cities_to.name AS `to`
+  
+FROM
+
+  flights AS f
+  
+LEFT JOIN
+
+  cities AS cities_from
+  
+ON
+
+  f.from = cities_from.lable
+  
+LEFT JOIN
+
+  cities AS cities_to
+  
+ON
+
+  f.to = cities_to.lable;
 
 LESSON 6
 Задание №1
@@ -63,7 +105,7 @@ LESSON 6
   
   REPLACE INTO sample.users SELECT * FROM shop.users where id = 1;
   
-  DELETE FROM users WHERE id = 1;
+  DELETE FROM shop.users WHERE id = 1;
   
   можно также использовать INSERT и UPDATE
   
@@ -75,24 +117,37 @@ LESSON 6
 Задание №2
 
 1. CREATE OR REPLACE 
-VIEW produc 
-AS SELECT p.name, c.name 
-AS catalog_id 
-FROM catalogs AS c 
-JOIN products AS p on c.id = p.catalog_id;
+
+VIEW product
+
+AS SELECT p.name, c.name
+
+AS catalog_id
+
+FROM catalogs AS c
+
+JOIN products
+
+AS p on c.id = p.catalog_id;
 
 Если нужно выбрать конкретный файл добавляем and p.id = n;
 
 Задание №3
 
-1. CREATE TABLE IF NOT EXISTS creat_tbl ( id int(11) NOT NULL AUTO_INCREMENT, created_at date NOT NULL, PRIMARY KEY (id)
+1. CREATE TABLE IF NOT EXISTS creat_tbl ( id int(11) NOT NULL AUTO_INCREMENT,
+
+name VARCHAR(255), 
+
+created_at date NOT NULL, 
+
+PRIMARY KEY (id)
    );
    
    INSERT INTO creat_tbl VALUES
-   (1, '2018-08-01'),
-   (2, '2018-08-04'),
-   (3, '2018-08-16'),
-   (4, '2018-08-17');
+   (1, 'первая', '2018-08-01'),
+   (2, 'вторая','2018-08-04'),
+   (3, 'третья' ,'2018-08-16'),
+   (4, 'четвертая' ,'2018-08-17');
    
 2. первый подход. выводим дни месяца:
 
@@ -154,6 +209,45 @@ SELECT d.date_at, IF(d.date_at IN (c.created_at), TRUE, FALSE) AS status from da
 
 
  COMMIT
+ 
+ 4 подход: 
+ 
+ CREATE TEMPORARY TABLE last_days (
+  day INT
+);
+
+
+INSERT INTO last_days VALUES
+
+(0), (1), (2), (3), (4), (5), (6), (7), (8), (9), (10),
+
+(11), (12), (13), (14), (15), (16), (17), (18), (19), (20),
+
+(21), (22), (23), (24), (25), (26), (27), (28), (29), (30);
+
+SELECT
+
+  DATE(DATE('2018-08-31') - INTERVAL l.day DAY) AS day,
+  
+  NOT IS NULL(p.name) AS order_exist
+  
+FROM
+
+  last_days AS l
+  
+LEFT JOIN
+
+  creat_tbl AS p
+  
+ON
+
+  DATE(DATE('2018-08-31') - INTERVAL l.day DAY) = p.created_at
+  
+ORDER BY
+
+  day;
+ 
+ 
 
 
 Задание №4
@@ -184,7 +278,17 @@ INSERT INTO creat_at VALUES
 (19, 'девятнадцатая запись', '2018-08-19'),
 (20, 'двадцатая запись', '2018-08-20');
 
- 1. DELETE creat_at FROM creat_at JOIN (SELECT created_at FROM creat_at ORDER BY created_at DESC LIMIT 5, 1) AS point ON creat_at.created_at < point.created_at;
+ 1. DELETE creat_at 
+ 
+ FROM creat_at 
+ 
+ JOIN (SELECT created_at FROM creat_at ORDER BY created_at DESC LIMIT 5, 1)
+ 
+ AS point 
+ 
+ ON 
+ 
+ creat_at.created_at < point.created_at;
  
  2. START TRANSACTION;
  
