@@ -3,12 +3,17 @@ hm lesson 5
 LESSON 5
 
 Задание №1
-1. SELECT id, name FROM users WHERE id IN (SELECT user_id FROM orders WHERE id = user_id);
+1. SELECT id, name 
+FROM users 
+WHERE id IN (SELECT user_id FROM orders WHERE id = user_id);
 
 Задание №2
 Например Gigabyte H310M S2H id = 6:
 
-SELECT p.id, p.name, c.name AS catalog_id FROM catalogs AS c JOIN products AS p on c.id = p.catalog_id and p.id = 6;
+SELECT p.id, p.name, c.name AS catalog_id 
+FROM catalogs AS c 
+JOIN products AS p
+ON c.id = p.catalog_id and p.id = 6;
 
 в случае когда множество товаров, конечно надо сначала найти данный товар с помошью, например %,_ и потом вывести соответственно.
 
@@ -20,14 +25,25 @@ CREATE TABLE flights (
   `to` VARCHAR(255)
  );
 
-INSERT INTO flights (id, `from`, `to`) VALUES ('1','moscow', 'omsk' ), ('2', 'novgorod', 'kazan'), ('3', 'irkutsk', 'moscow'), ('4', 'omsk', 'irkutsk'), ('5', 'moscow', 'kazan');
+INSERT INTO flights (id, `from`, `to`)
+VALUES ('1','moscow', 'omsk' ), 
+('2', 'novgorod', 'kazan'), 
+('3', 'irkutsk', 'moscow'), 
+('4', 'omsk', 'irkutsk'), 
+('5', 'moscow', 'kazan');
 DROP TABLE IF EXISTS cities;
 CREATE TABLE cities (
   lable VARCHAR(255) PRIMARY KEY,
   name VARCHAR(255)  
  );
  
-INSERT INTO cities (lable, name) VALUES ('moscow', 'Москва' ), ('irkutsk', 'Иркутск'), ('novgorod', 'Новгород'), ('kazan', 'Казань'), ('omsk', 'Омск');
+INSERT INTO 
+cities (lable, name) VALUES 
+('moscow', 'Москва' ), 
+('irkutsk', 'Иркутск'), 
+('novgorod', 'Новгород'), 
+('kazan', 'Казань'), 
+('omsk', 'Омск');
 select `from`,`to` from flights;
 НЕ УСПЕЛ РЕШИТЬ, ТРЕБУЕТСЯ JOIN НО НЕ ПОЛУЧИЛОСЬ.
 наверно неправильно таблицы связал..надо сделать внешний ключ. не пойму.
@@ -35,7 +51,7 @@ select `from`,`to` from flights;
 
 LESSON 6
 Задание №1
-1.SET AUTOCOMMIT = 0;
+1. START TRANSACTION;
 
   USE shop
   
@@ -47,16 +63,23 @@ LESSON 6
   
   REPLACE INTO sample.users SELECT * FROM shop.users where id = 1;
   
+  DELETE FROM users WHERE id = 1;
+  
   можно также использовать INSERT и UPDATE
   
-  SET AUTOCOMMIT = 1; 
+  COMMIT; 
 
 Также можно добавить команды DESCRIBE для проверки соответствия таблиц и SHOW TABLE STATUS
 для проверки соответствия кодировок;
 
 Задание №2
 
-1. CREATE OR REPLACE VIEW produc AS SELECT p.name, c.name AS catalog_id FROM catalogs AS c JOIN products AS p on c.id = p.catalog_id;
+1. CREATE OR REPLACE 
+VIEW produc 
+AS SELECT p.name, c.name 
+AS catalog_id 
+FROM catalogs AS c 
+JOIN products AS p on c.id = p.catalog_id;
 
 Если нужно выбрать конкретный файл добавляем and p.id = n;
 
@@ -75,11 +98,17 @@ LESSON 6
 
    SELECT * FROM 
 (SELECT ADDDATE('1970-01-01',t4*10000 + t3*1000 + t2*100 + t1*10 + t0) days_from FROM
+
  (SELECT 0 t0 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t0,
+ 
  (SELECT 0 t1 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t1,
+ 
  (SELECT 0 t2 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t2,
+ 
  (SELECT 0 t3 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t3,
+ 
  (SELECT 0 t4 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t4) v 
+ 
 WHERE days_from BETWEEN '2018-08-01' AND '2018-08-30'
 
   SELECT days_from, IF(days_from = created_at, '1', '0') AS status FROM creat_tbl; 
@@ -101,12 +130,19 @@ START TRANSACTION;
   CREATE TEMPORARY TABLE date_at ( date_at DATE);
   
   INSERT INTO date_at SELECT * FROM 
+  
   (SELECT ADDDATE('1970-01-01',t4*10000 + t3*1000 + t2*100 + t1*10 + t0) days_from FROM
+  
   (SELECT 0 t0 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t0,
+  
   (SELECT 0 t1 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t1,
+  
   (SELECT 0 t2 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t2,
+  
   (SELECT 0 t3 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t3,
+  
   (SELECT 0 t4 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t4) v 
+  
  WHERE days_from BETWEEN '2018-08-01' AND '2018-08-30';
  
  SELECT date_at, IF(date_at != created_at, '0', '1') AS status from date_at, creat_tbl group by date_at, status; 
